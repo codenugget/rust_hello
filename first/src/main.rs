@@ -24,7 +24,7 @@ fn cp_atomic_u8(buf: & Vec<AtomicU8>) -> Vec<AtomicU8> {
 }
 
 fn replace_vals(dst: &mut Vec<u8>, src: & Vec<AtomicU8>) {
-    for i in 1 .. src.len()-1 {
+    for i in 1 .. src.len() {
         let v = src[i].load(Ordering::Relaxed);
         dst[i] = v;
     }
@@ -33,7 +33,7 @@ fn replace_vals(dst: &mut Vec<u8>, src: & Vec<AtomicU8>) {
 fn modify_seq(buf: &mut Vec<u8>, width: u32, height: u32, nc: u32, increment: u8) {
     // calculate
     let num_pixels: usize = (width * height) as usize;
-    for pixel_index in 0 .. num_pixels-1 {
+    for pixel_index in 0 .. num_pixels {
         let i0 = pixel_index * nc as usize;
         for j in 0 .. nc-1 {
             let i = i0 + j as usize;
@@ -107,7 +107,7 @@ fn modify_batch(buf_in: &mut Vec<u8>, width: u32, height: u32, nc: u32, incremen
         let x0 = block_index;
         let x1 = cmp::min(x0 + batch_size, num_pixels);
 
-        for x in x0 .. x1-1 {
+        for x in x0 .. x1 {
             let index = x * nc;
             for j in 0 .. nc-1 {
                 let i : usize = (index + j) as usize;
@@ -133,7 +133,7 @@ fn profile_sequential(num_samples: u32, buf_orig: &mut Vec<u8>, width: u32, heig
 
         // calculate
         let num_pixels: usize = (width * height) as usize;
-        for pixel_index in 0 .. num_pixels-1 {
+        for pixel_index in 0 .. num_pixels {
             let i0 = pixel_index * nc as usize;
             for j in 0 .. nc-1 {
                 let i = i0 + j as usize;
@@ -176,7 +176,7 @@ fn profile_parallel_batches(num_samples: u32, buf_orig: &mut Vec<AtomicU8>, widt
 
         locations.par_iter().for_each(|&(x0, x1)| {
             // Process each block
-            for x in x0 .. x1-1 {
+            for x in x0 .. x1 {
                 let index = x * nc;
                 for j in 0 .. nc-1 {
                     let i : usize = (index + j) as usize;
