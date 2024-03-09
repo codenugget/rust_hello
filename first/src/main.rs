@@ -301,7 +301,11 @@ fn load_png(inpath: &std::path::Path) -> (Vec<u8>, png::OutputInfo) {
 fn main() {
     let filename_in = std::path::Path::new(r"pillars.png");
     let (mut buf, info) = load_png(filename_in);
-    println!("Image: {:.?}, dimensions: ({}, {})", filename_in, info.width, info.height);
+    println!("Image: {:.?}, dimensions: ({}, {}), ColorType: {:.?}, BitDepth: {:.?}", filename_in, info.width, info.height, info.color_type, info.bit_depth);
+    if info.color_type != png::ColorType::Rgba {
+        println!("Only rgba images are supported in this program");
+        std::process::exit(1);
+    }
 
     let increment: u8 = 64;
     let block_size: u32 = 64;
