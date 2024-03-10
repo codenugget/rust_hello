@@ -36,8 +36,10 @@ int main(int argc, char** argv)
 	std::string filename = "pillars.png";
 	std::string filename_out = "output.png";
 	auto orig = ImageLib::load(filename);
-	if (!orig)
+	if (!orig) {
 		std::cerr << "Unable to load file " << filename << std::endl;
+		exit(1);
+	}
 	if (orig->components() != 4) {
 		std::cerr << "This program only supports rgba mode" << std::endl;
 		exit(1);
