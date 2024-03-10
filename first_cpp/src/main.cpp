@@ -9,7 +9,6 @@
 
 void add_pixels_single_threaded_intrinsics(ImageLib::Image* img, const uint8_t r, const uint8_t g, const uint8_t b, const uint8_t a) {
 	__m128i intr_x;
-	__m128i intr_sum;
 	const uint32_t n_tot = img->count_pixel_components();
 	int32_t intr_n = n_tot >> 4;
 	uint8_t* cur_ptr = img->vec_data().data();
@@ -17,8 +16,8 @@ void add_pixels_single_threaded_intrinsics(ImageLib::Image* img, const uint8_t r
 	const __m128i intr_inc = _mm_load_si128((const __m128i*) inc);
 	while (intr_n-- > 0) {
 		intr_x = _mm_load_si128((const __m128i*) cur_ptr);
-		intr_sum = _mm_adds_epu8(intr_x, intr_inc);
-		_mm_store_si128((__m128i*) cur_ptr, intr_sum);
+		intr_x = _mm_adds_epu8(intr_x, intr_inc);
+		_mm_store_si128((__m128i*) cur_ptr, intr_x);
 		cur_ptr += 16;
 	}
 
@@ -26,8 +25,8 @@ void add_pixels_single_threaded_intrinsics(ImageLib::Image* img, const uint8_t r
 	if (intr_rem > 0) {
 		memcpy(inc, cur_ptr, intr_rem);
 		intr_x = _mm_load_si128((const __m128i*) inc);
-		intr_sum = _mm_adds_epu8(intr_x, intr_inc);
-		_mm_store_si128((__m128i*) inc, intr_sum);
+		intr_x = _mm_adds_epu8(intr_x, intr_inc);
+		_mm_store_si128((__m128i*) inc, intr_x);
 		memcpy(cur_ptr, inc, intr_rem);
 		cur_ptr += intr_rem;
 	}
