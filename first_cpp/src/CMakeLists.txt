@@ -4,6 +4,8 @@ set(src
 	Image.h
 	Image_funcs.h
 	Image_storage.h
+	InstructionSet.cpp
+	InstructionSet.h
 	main.cpp
 	stb_image.h
 	stb_image_resize.h
